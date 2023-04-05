@@ -8,7 +8,7 @@ import '../state/app.state.dart';
 import '../util/log.util.dart';
 
 class StorageService {
-  static void init({Function(String)? onError}) async {
+  static Future<bool> init({Function(String)? onError}) async {
     LogUtil.devLog("StorageService.init()", message: 'Initializing storage');
     Directory appDocDir = await getApplicationDocumentsDirectory();
 
@@ -43,9 +43,12 @@ class StorageService {
         final stateData = AppData.fromJson(contents);
         AppState.state.update(stateData);
       }
+
+      return true;
     } on Exception catch (ex) {
       LogUtil.devLog("StorageService.init()", message: ex.toString());
       onError?.call(ex.toString());
+      return false;
     }
   }
 

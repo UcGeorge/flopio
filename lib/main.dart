@@ -7,11 +7,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:scaled_app/scaled_app.dart';
 
 import 'app/cache_manager.dart';
-import 'app/database_manager.dart';
 import 'app/remote_methods.dart';
 // import 'firebase_options.dart';
 import 'src/alert/alert.dart';
-import 'src/counter/counter.dart';
+import 'src/splash/splash.flow.dart';
+import 'src/splash/splash.view.dart';
 import 'util/log.util.dart';
 
 void main() async {
@@ -47,8 +47,8 @@ void main() async {
   LogUtil.devLog("main", message: "Initializing Cache manager");
   await CacheManager.init();
 
-  LogUtil.devLog("main", message: "Initializing database manager");
-  await DatabaseManager.init();
+  // LogUtil.devLog("main", message: "Initializing database manager");
+  // await DatabaseManager.init();
 
   //TODO: Initialize firebase in app
   // LogUtil.devLog("main", message: "Initializing Firebase app");
@@ -73,7 +73,7 @@ void main() async {
   doWhenWindowReady(() {
     var initialSize = const Size(700, 516);
     appWindow.minSize = initialSize;
-    appWindow.title = 'ShenKu';
+    appWindow.title = 'Flopio';
     appWindow.alignment = Alignment.center;
     appWindow.show();
   });
@@ -93,13 +93,11 @@ class MyApp extends StatelessWidget {
           SystemChannels.textInput.invokeMethod('TextInput.hide');
         }
       },
-      child: const AlertWrapper(
+      child: AlertWrapper(
         app: MaterialApp(
           title: 'Flopio',
           debugShowCheckedModeBanner: false,
-          home: CounterPage(
-            title: "Flopio",
-          ),
+          home: SplashView(flow: SplashFlow()..init()),
         ),
       ),
     );

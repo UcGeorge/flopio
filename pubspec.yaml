@@ -8,7 +8,10 @@ environment:
   sdk: ">=2.19.2 <3.0.0"
 
 dependencies:
+  animated_text_kit: ^4.2.2
   bitsdojo_window: ^0.1.5
+  cached_network_image: ^3.2.3
+  connectivity_plus: ^3.0.3
   crypto: ^3.0.2
   cupertino_icons: ^1.0.2
   dio: ^5.0.3
@@ -20,6 +23,8 @@ dependencies:
     sdk: flutter
   flutter_animate: ^4.1.0
   flutter_native_splash: ^2.2.19
+  flutter_spinkit: ^5.1.0
+  flutter_svg: ^2.0.4
   google_fonts: ^4.0.3
   image_picker: ^0.8.7
   intl: ^0.18.0

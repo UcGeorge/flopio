@@ -1,8 +1,7 @@
-import 'package:flopio/services/storage.service.dart';
-
 import '../app/queue.dart';
 import '../app/streamed_value.dart';
 import '../data/models/app_data.dart';
+import '../services/storage.service.dart';
 
 class AppState {
   static StreamedValue<AppData> state = StreamedValue<AppData>(
@@ -12,8 +11,8 @@ class AppState {
   static Queue<AppData> updateQueue = Queue<AppData>();
 
   static Future<void> update(AppData Function(AppData data) onUpdate) async {
-    state.update(onUpdate(state.value!));
-    updateQueue.enqueue(onUpdate(state.value!));
+    state.update(onUpdate(state.value));
+    updateQueue.enqueue(onUpdate(state.value));
 
     if (updateQueue.busy) return;
 

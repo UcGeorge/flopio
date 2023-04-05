@@ -47,8 +47,8 @@ class HistoryService {
     required chapterId,
     String? addChapterId,
   }) async {
-    if (!AppState.state.value!.history.containsKey(bookId)) return;
-    if (!AppState.state.value!.history[bookId]!.chapterHistory
+    if (!AppState.state.value.history.containsKey(bookId)) return;
+    if (!AppState.state.value.history[bookId]!.chapterHistory
         .containsKey(chapterId)) {
       return;
     }
@@ -71,7 +71,7 @@ class HistoryService {
       ),
     );
 
-    if (AppState.state.value!.history[bookId]!.chapterHistory.isEmpty) {
+    if (AppState.state.value.history[bookId]!.chapterHistory.isEmpty) {
       AppState.update(
         (data) => data.copyWith(
           history: data.history..remove(bookId),

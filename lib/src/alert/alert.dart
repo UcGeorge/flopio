@@ -38,7 +38,16 @@ class AlertWrapper extends StatelessWidget {
           child: Stack(
             children: [
               app,
-              const StateFulAlertView(),
+              const Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: 400,
+                    child: StateFulAlertView(),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:flopio/app/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/fonts.dart';
@@ -16,17 +17,17 @@ class InAppAlert {
               ? const Color(0xffFFFAE2)
               : const Color(0xffFFF4EE);
 
-  static double get kBarHeight => 64;
+  static double get kBarHeight => 48;
 
   static Duration get kDialogueDuration => const Duration(seconds: 5);
 
   static Color get kCloseIconColor => const Color(0xff0D1C2E);
 
   static TextStyle get kTextStyle => AppFonts.poppins.copyWith(
-        color: const Color(0xff2c2929),
+        color: AppColors.white.withOpacity(.7),
         fontWeight: FontWeight.w500,
-        fontSize: 14,
-        height: 22 / 14,
+        fontSize: 12,
+        height: AppFonts.lineHeight,
       );
 }
 

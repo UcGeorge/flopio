@@ -1,7 +1,6 @@
-import 'package:flopio/state/app.state.dart';
-import 'package:flopio/util/alert.util.dart';
-
 import '../data/models/book.dart';
+import '../state/app.state.dart';
+import '../util/alert.util.dart';
 import '../util/log.util.dart';
 
 class LibraryService {
@@ -11,7 +10,7 @@ class LibraryService {
       message: 'Adding to library: ${book.name}',
     );
 
-    if (AppState.state.value!.library.contains(book)) {
+    if (AppState.state.value.library.contains(book)) {
       LogUtil.devLog(
         "LibraryService.addToLibrary()",
         message: '${book.name} is already in library.',
@@ -33,7 +32,7 @@ class LibraryService {
       message: 'Removing from library: ${book.name}',
     );
 
-    if (!AppState.state.value!.library.contains(book)) {
+    if (!AppState.state.value.library.contains(book)) {
       LogUtil.devLog(
         "LibraryService.addToLibrary()",
         message: '${book.name} is not in library.',

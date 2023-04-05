@@ -1,3 +1,4 @@
+import 'package:flopio/util/log.util.dart';
 import 'package:flutter/material.dart';
 
 import '../src/alert/models/inapp_alert.dart';
@@ -67,6 +68,7 @@ class AlertUtil {
     required AlertType type,
     Duration? duration,
   }) async {
+    LogUtil.devLog("AlertUtil._addAlert()", message: text);
     alertList.insert(
       0,
       Alert(
