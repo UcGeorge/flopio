@@ -100,8 +100,8 @@ class Book extends Equatable {
 
   Book merge(Book book, {required List<String> fields}) {
     return copyWith(
-      chapterCount: fields.contains('chapterCount') ? book.chapterCount : null,
-      chapters: fields.contains('chapters') ? book.chapters : null,
+      chapterCount: book.chapterCount ?? chapterCount,
+      chapters: book.chapters ?? chapters,
       coverPicture: fields.contains('coverPicture') ? book.coverPicture : null,
       description: fields.contains('description') ? book.description : null,
       link: fields.contains('link') ? book.link : null,

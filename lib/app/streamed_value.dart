@@ -16,7 +16,7 @@ class StreamedValue<T> {
 
   update(T newState) => _emit(newState);
 
-  mutate(Function(T state) mutate) {
+  mutate(void Function(T state) mutate) {
     mutate(_state);
     _streamController.add(_state);
   }

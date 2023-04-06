@@ -19,11 +19,14 @@ class BookDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    flow.init();
+
     return StreamBuilder<Book?>(
       stream: BookState.state.stream,
       initialData: BookState.state.value,
       builder: (context, state) {
         final book = state.data!;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

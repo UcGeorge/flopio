@@ -99,23 +99,21 @@ class Manganelo extends BookSource {
         }
 
         //* Get chapters & chapterCount
-        if (fields.contains('chapters')) {
-          List<Chapter> chapters = [];
-          webScraper.getElement(chapterNameSelector, ['href']).iterate((e, i) {
-            var name = e['title'];
-            var link = e['attributes']['href'];
-            chapters.add(Chapter(
-              id: (domain + book.name + name).toHash,
-              name: name,
-              link: link,
-              source: ChapterSource.network,
-            ));
-          });
-          result = result.copyWith(
-            chapters: chapters,
-            chapterCount: chapters.length,
-          );
-        }
+        List<Chapter> chapters = [];
+        webScraper.getElement(chapterNameSelector, ['href']).iterate((e, i) {
+          var name = e['title'];
+          var link = e['attributes']['href'];
+          chapters.add(Chapter(
+            id: (domain + book.name + name).toHash,
+            name: name,
+            link: link,
+            source: ChapterSource.network,
+          ));
+        });
+        result = result.copyWith(
+          chapters: chapters,
+          chapterCount: chapters.length,
+        );
 
         return result;
       } else {

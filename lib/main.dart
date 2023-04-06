@@ -97,7 +97,9 @@ class MyApp extends StatelessWidget {
         app: MaterialApp(
           title: 'Flopio',
           debugShowCheckedModeBanner: false,
-          home: SplashView(flow: SplashFlow()..init()),
+          home: Builder(builder: (context) {
+            return SplashView(flow: SplashFlow()..init(context));
+          }),
         ),
       ),
     );

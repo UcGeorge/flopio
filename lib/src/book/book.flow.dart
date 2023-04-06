@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/app.dart';
 import '../../data/models/book.dart';
 import '../../data/models/chapter.dart';
 import '../../state/app.state.dart';
@@ -7,11 +8,45 @@ import '../../state/book.state.dart';
 import '../../state/reading.state.dart';
 import '../../util/log.util.dart';
 import '../chapter/chapter.flow.dart';
+import 'extensions/source.dart';
 
 class BookFlow {
-  void _setReadingState(Book book, String chapterId) {
-    ReadingState.state.update(book);
-    ReadingState.chapterIdState.update(chapterId);
+  static void start(Book book) => BookState.state.update(book);
+
+  void init() async {
+    final book = BookState.state.value;
+
+    if (book == null) return;
+    // if (book.hasCompleteData) return;
+
+    LogUtil.devLog(
+      "BookFlow.init()",
+      message: 'Getting book details for ${book.name}',
+    );
+
+    String source = book.source;
+
+    Book detailedBook = book.merge(
+      await AppInfo.appBookSources.getSource(source).getBookDetails(
+            book,
+            fields: book.missingFields,
+          ),
+      fields: book.missingFields,
+    );
+
+    if (BookState.state.value == detailedBook) {
+      BookState.state.update(detailedBook);
+    }
+
+    final bookInLibrary = AppState.state.value.library.contains(detailedBook);
+
+    if (bookInLibrary) {
+      AppState.state.mutate((state) {
+        state.library
+          ..remove(book)
+          ..insert(0, detailedBook);
+      });
+    }
   }
 
   void showChapter(BuildContext context, Chapter chapter) {
@@ -69,5 +104,10 @@ class BookFlow {
     _setReadingState(book, chapterId);
 
     ChapterFlow.start(context);
+  }
+
+  void _setReadingState(Book book, String chapterId) {
+    ReadingState.state.update(book);
+    ReadingState.chapterIdState.update(chapterId);
   }
 }

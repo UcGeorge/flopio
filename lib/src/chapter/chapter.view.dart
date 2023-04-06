@@ -14,17 +14,28 @@ import 'components/chapter_content.dart';
 import 'components/nav_buttons.dart';
 import 'components/title_bar.dart';
 
-class ChapterView extends StatelessWidget {
+class ChapterView extends StatefulWidget {
   const ChapterView({super.key, required this.flow});
 
   final ChapterFlow flow;
 
   @override
+  State<ChapterView> createState() => _ChapterViewState();
+}
+
+class _ChapterViewState extends State<ChapterView> {
+  @override
+  void dispose() {
+    super.dispose();
+    widget.flow.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<Chapter?>(
-      stream: flow.chapter.stream,
+      stream: widget.flow.chapter.stream,
       builder: (context, snapshot) {
-        final Book book = flow.book;
+        final Book book = widget.flow.book;
         final Chapter? chapter = snapshot.data;
 
         LogUtil.devLog(
@@ -50,18 +61,18 @@ class ChapterView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(child: ChapterContent(flow: flow)),
+                            Expanded(child: ChapterContent(flow: widget.flow)),
                             const ShenStatusBar(),
                           ],
                         ),
                       ),
-                      TitleBar(flow: flow),
+                      TitleBar(flow: widget.flow),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 40),
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: ChapterNavButtons(
-                            flow: flow,
+                            flow: widget.flow,
                             chapterScrollController:
                                 ReadingState.scrollController,
                           ),

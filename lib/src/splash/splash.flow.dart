@@ -8,6 +8,7 @@ import '../../app/app.dart';
 import '../../app/colors.dart';
 import '../../app/fonts.dart';
 import '../../services/storage.service.dart';
+import '../../state/navigation.state.dart';
 import '../../state/status_bar.state.dart';
 import '../../util/alert.util.dart';
 import '../../util/flow.util.dart';
@@ -18,12 +19,12 @@ class SplashFlow {
     FlowUtil.moveToAndRemoveAll(
       context: context,
       page: SplashView(
-        flow: SplashFlow()..init(),
+        flow: SplashFlow()..init(context),
       ),
     );
   }
 
-  Future<void> init() async {
+  Future<void> init(BuildContext context) async {
     await Future.delayed(3.seconds);
     final bool storageIsInitialised = await StorageService.init(
       onError: (error) => AlertUtil.showError(error),
@@ -35,12 +36,13 @@ class SplashFlow {
     }
 
     _addPathToStatusBar();
-    _goToHome();
+    _goToHome(context);
   }
 
-  void _goToHome() {
-    //TODO Go to home page
-    AlertUtil.showSuccess("Going to home!");
+  void _goToHome(BuildContext context) {
+    AlertUtil.showSuccess("Initialization complete!");
+    NavigationState.state.value.resume(context);
+    // HomeFlow().resume(context);
   }
 
   void _addPathToStatusBar() async {

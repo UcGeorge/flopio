@@ -1,12 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../app/app.dart';
+import '../../app/source.dart';
 import '../../app/streamed_value.dart';
 import '../../data/models/book.dart';
 import '../../data/models/chapter.dart';
 import '../../services/history.service.dart';
+import '../../state/app.state.dart';
 import '../../state/reading.state.dart';
 import '../../state/status_bar.state.dart';
 import '../../util/flow.util.dart';
+import '../../util/log.util.dart';
+import '../book/extensions/source.dart';
 import 'chapter.view.dart';
 import 'components/progress_indicator.dart';
 
@@ -17,6 +24,7 @@ class ChapterFlow {
   final StreamedValue<Chapter?> chapter =
       StreamedValue<Chapter?>(initialValue: null);
 
+  late StreamSubscription chapterIdStateStreamSubscription;
   Set<int> loadedUnits = {};
 
   void init() {
@@ -25,7 +33,10 @@ class ChapterFlow {
     chapter.update(
         book.chapters!.firstWhere((element) => element.id == chapterId));
 
-    ReadingState.chapterIdState.stream.listen(_updateChapterState);
+    chapterIdStateStreamSubscription =
+        ReadingState.chapterIdState.stream.listen(_updateChapterState);
+
+    _getChapterDetails();
   }
 
   void previousChapter() {
@@ -91,6 +102,11 @@ class ChapterFlow {
     );
   }
 
+  void dispose() {
+    chapterIdStateStreamSubscription.cancel();
+    chapter.dispose();
+  }
+
   static void start(BuildContext context) {
     FlowUtil.moveTo(
       context: context,
@@ -99,6 +115,49 @@ class ChapterFlow {
       ),
       transition: FlowTransition.slide,
     );
+  }
+
+  Future<void> _getChapterDetails() async {
+    final chapter = this.chapter.value;
+
+    if (chapter == null) return;
+
+    LogUtil.devLog(
+      "ChapterFlow._getChapterDetails()",
+      message: 'Getting chapter details for ${book.name} / ${chapter.name}',
+    );
+
+    BookSource source = AppInfo.appBookSources.getSource(book.source);
+
+    late Chapter updatedChapter;
+
+    if ((book.type == BookType.manga && chapter.chapterImages == null) ||
+        (book.type == BookType.novel && chapter.chapterParagraphs == null)) {
+      updatedChapter = await source.getBookChapterDetails(chapter);
+    } else {
+      return;
+    }
+
+    if (updatedChapter.id == ReadingState.chapterIdState.value) {
+      LogUtil.devLog(
+        "ChapterFlow._getChapterDetails()",
+        message: 'Got chapter details for ${book.name} / ${chapter.name}',
+      );
+
+      final chapterIndex = book.chapters!.indexOf(updatedChapter);
+      book.chapters![chapterIndex] = updatedChapter;
+
+      this.chapter.update(updatedChapter);
+    }
+
+    final bookInLibrary = AppState.state.value.library.contains(book);
+    if (bookInLibrary) {
+      AppState.state.mutate((state) {
+        state.library
+          ..remove(book)
+          ..insert(0, book);
+      });
+    }
   }
 
   void _updateChapterState(String? chapterId) {
