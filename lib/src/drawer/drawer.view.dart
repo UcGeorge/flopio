@@ -46,7 +46,7 @@ class _AppDrawerState extends State<AppDrawer> {
             SvgPicture.asset(
               AppSVG.shenKuSvg,
               height: 22,
-              color: AppColors.white,
+              color: AppColors.thisWhite,
             ),
             const Spacer(),
             Icon(
