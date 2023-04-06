@@ -1,4 +1,6 @@
+import 'package:flopio/state/update.state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../app/app.dart';
 import '../../data/models/book.dart';
@@ -11,13 +13,21 @@ import '../chapter/chapter.flow.dart';
 import 'extensions/source.dart';
 
 class BookFlow {
-  static void start(Book book) => BookState.state.update(book);
+  static void start(Book book) {
+    BookState.state.update(book);
+    BookState.newStateCount.mutate((state) => state += 1);
+  }
 
   void init() async {
     final book = BookState.state.value;
 
     if (book == null) return;
     // if (book.hasCompleteData) return;
+
+    final DateTime? lastUpdateTime = UpdateState.updateLog.value[book];
+
+    if (lastUpdateTime != null &&
+        DateTime.now().difference(lastUpdateTime) < 1.minutes) return;
 
     LogUtil.devLog(
       "BookFlow.init()",
@@ -41,11 +51,17 @@ class BookFlow {
     final bookInLibrary = AppState.state.value.library.contains(detailedBook);
 
     if (bookInLibrary) {
-      AppState.state.mutate((state) {
+      AppState.mutate((state) {
         state.library
           ..remove(book)
           ..insert(0, detailedBook);
       });
+
+      UpdateState.updateLog.mutate((state) => state.update(
+            book,
+            (value) => DateTime.now(),
+            ifAbsent: () => DateTime.now(),
+          ));
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../data/models/book.dart';
@@ -11,16 +13,35 @@ import 'components/cover_photo.dart';
 import 'components/name.dart';
 import 'components/view_extensions.dart';
 
-class BookDetailsView extends StatelessWidget {
-  BookDetailsView({Key? key, required this.flow}) : super(key: key);
+class BookDetailsView extends StatefulWidget {
+  const BookDetailsView({Key? key, required this.flow}) : super(key: key);
 
-  final ScrollController controller = ScrollController();
   final BookFlow flow;
 
   @override
-  Widget build(BuildContext context) {
-    flow.init();
+  State<BookDetailsView> createState() => _BookDetailsViewState();
+}
 
+class _BookDetailsViewState extends State<BookDetailsView> {
+  final ScrollController controller = ScrollController();
+  late StreamSubscription newBookStateCount;
+
+  @override
+  void dispose() {
+    newBookStateCount.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    widget.flow.init();
+    newBookStateCount =
+        BookState.newStateCount.stream.listen((event) => widget.flow.init());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<Book?>(
       stream: BookState.state.stream,
       initialData: BookState.state.value,
@@ -58,13 +79,13 @@ class BookDetailsView extends StatelessWidget {
                                 spacing: 4,
                                 children: [
                                   if (!appState.library.contains(book))
-                                    buildAddButton(book),
+                                    widget.buildAddButton(book),
                                   if (appState.history.containsKey(book.id) &&
                                       appState.history[book.id]!.chapterHistory
                                           .containsKey(appState
                                               .history[book.id]!
                                               .lastReadChapterId))
-                                    buildResumeButton(
+                                    widget.buildResumeButton(
                                       context,
                                       book,
                                       appState
@@ -79,9 +100,9 @@ class BookDetailsView extends StatelessWidget {
                                   if (!appState.history.containsKey(book.id) &&
                                       book.chapters != null &&
                                       book.chapters!.isNotEmpty)
-                                    buildStartButton(context, book),
+                                    widget.buildStartButton(context, book),
                                   if (appState.library.contains(book))
-                                    buildRemoveButton(book),
+                                    widget.buildRemoveButton(book),
                                 ],
                               ),
                             ],
@@ -96,7 +117,7 @@ class BookDetailsView extends StatelessWidget {
             BookContent(
               controller: controller,
               book: book,
-              flow: flow,
+              flow: widget.flow,
             ),
           ],
         );

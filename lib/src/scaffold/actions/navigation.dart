@@ -26,7 +26,7 @@ class GoBackAction extends Action<BackIntent> {
   }
 
   @override
-  bool get isActionEnabled => NavigationState.backwardStack.value.length > 1;
+  bool get isActionEnabled => NavigationState.backwardStack.value.isNotEmpty;
 
   @override
   bool isEnabled(BackIntent intent) => isActionEnabled;
@@ -44,7 +44,7 @@ class GoFowardAction extends Action<FowardIntent> {
   }
 
   @override
-  bool get isActionEnabled => NavigationState.fowardStack.value.length > 1;
+  bool get isActionEnabled => NavigationState.fowardStack.value.isNotEmpty;
 
   @override
   bool isEnabled(FowardIntent intent) => isActionEnabled;

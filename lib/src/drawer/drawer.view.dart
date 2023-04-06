@@ -104,7 +104,9 @@ class _AppDrawerState extends State<AppDrawer> {
                     child: AppDrawerTile(
                       title: "home",
                       expanded: expanded,
-                      onTap: () => DrawerService.goToHome(context),
+                      onTap: state.data!.flowName == "home"
+                          ? () {}
+                          : () => DrawerService.goToHome(context),
                       selected: state.data!.flowName == "home",
                       hovered: hovered == "home",
                       setHoverState: (value) => _setHovered(value),
@@ -117,7 +119,9 @@ class _AppDrawerState extends State<AppDrawer> {
                     child: AppDrawerTile(
                       title: "explore",
                       expanded: expanded,
-                      onTap: () => DrawerService.goToExplore(context),
+                      onTap: state.data!.flowName == "explore"
+                          ? () {}
+                          : () => DrawerService.goToExplore(context),
                       selected: state.data!.flowName == "explore",
                       hovered: hovered == "explore",
                       setHoverState: (value) => _setHovered(value),
@@ -130,7 +134,9 @@ class _AppDrawerState extends State<AppDrawer> {
                     child: AppDrawerTile(
                       title: "library",
                       expanded: expanded,
-                      onTap: () => DrawerService.goToLibrary(context),
+                      onTap: state.data!.flowName == "library"
+                          ? () {}
+                          : () => DrawerService.goToLibrary(context),
                       selected: state.data!.flowName == "library",
                       hovered: hovered == "library",
                       setHoverState: (value) => _setHovered(value),

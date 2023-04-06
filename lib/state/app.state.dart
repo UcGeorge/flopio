@@ -12,7 +12,22 @@ class AppState {
 
   static Future<void> update(AppData Function(AppData data) onUpdate) async {
     state.update(onUpdate(state.value));
-    updateQueue.enqueue(onUpdate(state.value));
+    updateQueue.enqueue(state.value);
+
+    if (updateQueue.busy) return;
+
+    updateQueue.reserve();
+    AppData? queuedData = updateQueue.next;
+    while (queuedData != null) {
+      await StorageService.saveData(queuedData);
+      queuedData = updateQueue.next;
+    }
+    updateQueue.release();
+  }
+
+  static Future<void> mutate(void Function(AppData data) onMutate) async {
+    state.mutate(onMutate);
+    updateQueue.enqueue(state.value);
 
     if (updateQueue.busy) return;
 

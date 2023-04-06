@@ -152,7 +152,7 @@ class ChapterFlow {
 
     final bookInLibrary = AppState.state.value.library.contains(book);
     if (bookInLibrary) {
-      AppState.state.mutate((state) {
+      AppState.mutate((state) {
         state.library
           ..remove(book)
           ..insert(0, book);

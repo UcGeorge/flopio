@@ -64,11 +64,14 @@ final kDarkThemeData = ThemeData(
   appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
   scaffoldBackgroundColor: const Color(0xFF121212),
   primaryColor: const Color(0xFF121212),
+  // ignore: deprecated_member_use
+  accentColor: const Color(0xFFF6A00C),
   iconTheme: const IconThemeData().copyWith(color: Colors.white),
   fontFamily: 'Montserrat',
   inputDecorationTheme: kInputDecorationTheme,
   textTheme: kTextTheme,
-  colorScheme: ColorScheme.fromSwatch().copyWith(
-    secondary: const Color(0xFFF6A00C),
-  ),
+  // colorScheme: ColorScheme.fromSwatch().copyWith(
+  //   secondary: const Color(0xFFF6A00C),
+  //   brightness: null,
+  // ),
 );

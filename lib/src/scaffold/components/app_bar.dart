@@ -7,6 +7,7 @@ import '../../../app/fonts.dart';
 import '../../../app/resumable_flow.dart';
 import '../../../state/navigation.state.dart';
 import '../../../util/screen.util.dart';
+import '../../../util/string.util.dart';
 import 'nav_buttons.dart';
 
 class ShenAppBar extends StatefulWidget {
@@ -68,7 +69,7 @@ class _ShenAppBarState extends State<ShenAppBar> {
               initialData: NavigationState.state.value,
               builder: (context, snapshot) {
                 return Text(
-                  snapshot.data!.flowName,
+                  snapshot.data!.flowName.capitalize,
                   style: AppFonts.nunito.copyWith(
                     color: AppColors.white,
                   ),

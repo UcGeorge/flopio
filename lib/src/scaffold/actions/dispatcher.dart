@@ -1,7 +1,5 @@
+import 'package:flopio/util/log.util.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
-
-final _log = Logger('<<ACTION>>');
 
 /// An ActionDispatcher that logs all the actions that it invokes.
 class LoggingActionDispatcher extends ActionDispatcher {
@@ -11,7 +9,10 @@ class LoggingActionDispatcher extends ActionDispatcher {
     covariant Intent intent, [
     BuildContext? context,
   ]) {
-    _log.info('Action invoked: $action($intent) from $context');
+    LogUtil.devLog(
+      "LoggingActionDispatcher",
+      message: 'Action invoked: $action($intent) from $context',
+    );
     return super.invokeAction(action, intent, context);
   }
 }

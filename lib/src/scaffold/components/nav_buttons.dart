@@ -12,27 +12,36 @@ class NavButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ResumableFlow>(
-      stream: NavigationState.state.stream,
-      initialData: NavigationState.state.value,
-      builder: (context, snapshot) {
-        return Row(
-          children: [
-            ShenNavButton(
-              enabled: NavigationState.backwardStack.value.length > 1,
-              onTap: () =>
-                  Actions.maybeInvoke<BackIntent>(context, const BackIntent()),
-            ),
-            const SizedBox(width: 4),
-            ShenNavButton(
+    return Row(
+      children: [
+        StreamBuilder<List<ResumableFlow>>(
+            stream: NavigationState.backwardStack.stream,
+            initialData: NavigationState.backwardStack.value,
+            builder: (context, snapshot) {
+              return ShenNavButton(
+                enabled: snapshot.data!.isNotEmpty,
+                onTap: () => Actions.maybeInvoke<BackIntent>(
+                  context,
+                  const BackIntent(),
+                ),
+              );
+            }),
+        const SizedBox(width: 4),
+        StreamBuilder<List<ResumableFlow>>(
+          stream: NavigationState.fowardStack.stream,
+          initialData: NavigationState.fowardStack.value,
+          builder: (context, snapshot) {
+            return ShenNavButton(
               quarterTurns: 2,
-              enabled: NavigationState.fowardStack.value.length > 1,
+              enabled: snapshot.data!.isNotEmpty,
               onTap: () => Actions.maybeInvoke<FowardIntent>(
-                  context, const FowardIntent()),
-            )
-          ],
-        );
-      },
+                context,
+                const FowardIntent(),
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 }

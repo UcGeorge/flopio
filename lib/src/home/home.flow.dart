@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../app/app.dart';
 import '../../app/resumable_flow.dart';
@@ -28,6 +29,8 @@ class HomeFlow extends ResumableFlow {
   void resume(BuildContext context, [bool startExpanded = false]) {
     FlowUtil.moveToAndRemoveAll(
       context: context,
+      transition: FlowTransition.fade,
+      transitionDuration: 300.ms,
       page: HomePage(
         flow: this..init(),
       ),
@@ -69,8 +72,8 @@ class HomeFlow extends ResumableFlow {
 
   void dispose() {
     appStateStreamSubscription.cancel();
-    library.dispose();
-    sourcesHomepage.dispose();
+    // library.dispose();
+    // sourcesHomepage.dispose();
   }
 
   void _updateLibrary(AppData event) => library.update(event.library);

@@ -21,6 +21,7 @@ class SeeAllFlow extends ResumableFlow {
   void resume(BuildContext context) {
     FlowUtil.moveToAndRemoveAll(
       context: context,
+      transition: FlowTransition.fade,
       page: SeeAllPage(
         flow: this,
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/colors.dart';
 import '../../../app/fonts.dart';
+import '../../../util/string.util.dart';
 
 class AppDrawerTile extends StatelessWidget {
   const AppDrawerTile({
@@ -41,40 +42,43 @@ class AppDrawerTile extends StatelessWidget {
             firstChild: SizedBox(
               height: 36,
               width: double.infinity,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    width: 24,
-                  ),
-                  SvgPicture.asset(selected ? selectedIconPath : iconPath),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    title,
-                    style: AppFonts.nunito.copyWith(
-                      fontSize: 18,
-                      color: selected || hovered
-                          ? AppColors.white
-                          : AppColors.lessWhite,
-                    ),
-                  ),
-                  const Spacer(),
-                  if (selected)
-                    Container(
-                      height: 36,
-                      width: 6,
-                      decoration: BoxDecoration(
-                        color: AppColors.violet,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(6),
-                          bottomLeft: Radius.circular(6),
+              child: expanded
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 24,
                         ),
-                      ),
-                    ),
-                ],
-              ),
+                        SvgPicture.asset(
+                            selected ? selectedIconPath : iconPath),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          title.capitalize,
+                          style: AppFonts.nunito.copyWith(
+                            fontSize: 18,
+                            color: selected || hovered
+                                ? AppColors.white
+                                : AppColors.lessWhite,
+                          ),
+                        ),
+                        const Spacer(),
+                        if (selected)
+                          Container(
+                            height: 36,
+                            width: 6,
+                            decoration: BoxDecoration(
+                              color: AppColors.violet,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(6),
+                                bottomLeft: Radius.circular(6),
+                              ),
+                            ),
+                          ),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
             ),
             secondChild: SizedBox(
               height: 36,

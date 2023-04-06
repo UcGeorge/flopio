@@ -7,6 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:scaled_app/scaled_app.dart';
 
 import 'app/cache_manager.dart';
+import 'app/constants.dart';
 import 'app/remote_methods.dart';
 // import 'firebase_options.dart';
 import 'src/alert/alert.dart';
@@ -97,6 +98,8 @@ class MyApp extends StatelessWidget {
         app: MaterialApp(
           title: 'Flopio',
           debugShowCheckedModeBanner: false,
+          themeMode: ThemeMode.dark,
+          darkTheme: kDarkThemeData,
           home: Builder(builder: (context) {
             return SplashView(flow: SplashFlow()..init(context));
           }),
