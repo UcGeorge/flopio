@@ -1,8 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../../app/colors.dart';
 import '../../data/models/book.dart';
 import '../../data/models/chapter.dart';
 import '../../state/reading.state.dart';
@@ -34,52 +32,51 @@ class _ChapterViewState extends State<ChapterView> {
   Widget build(BuildContext context) {
     return StreamBuilder<Chapter?>(
       stream: widget.flow.chapter.stream,
+      initialData: widget.flow.chapter.value,
       builder: (context, snapshot) {
         final Book book = widget.flow.book;
-        final Chapter? chapter = snapshot.data;
+        final Chapter chapter = snapshot.data!;
 
         LogUtil.devLog(
           "ChapterView",
-          message: 'Building chapter: ${book.name}/${chapter?.name}',
+          message: 'Building chapter: ${book.name}/${chapter.name}',
         );
 
         return WindowBorder(
           color: Colors.black,
           child: Material(
             color: Colors.black,
-            child: chapter == null
-                ? Center(
-                    child: SpinKitSpinningLines(
-                      color: AppColors.violet,
-                      size: 50,
-                    ),
-                  )
-                : Stack(
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: ScreenUtil.screenSize(context).height,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
-                        height: ScreenUtil.screenSize(context).height,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(child: ChapterContent(flow: widget.flow)),
-                            const ShenStatusBar(),
-                          ],
+                      Expanded(
+                        child: ChapterContent(
+                          flow: widget.flow,
+                          book: book,
+                          chapter: chapter,
                         ),
                       ),
-                      TitleBar(flow: widget.flow),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 40),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: ChapterNavButtons(
-                            flow: widget.flow,
-                            chapterScrollController:
-                                ReadingState.scrollController,
-                          ),
-                        ),
-                      ),
+                      const ShenStatusBar(),
                     ],
                   ),
+                ),
+                TitleBar(flow: widget.flow),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 40),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ChapterNavButtons(
+                      flow: widget.flow,
+                      chapterScrollController: ReadingState.scrollController,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

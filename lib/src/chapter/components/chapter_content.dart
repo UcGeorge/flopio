@@ -3,19 +3,24 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../app/colors.dart';
 import '../../../data/models/book.dart';
+import '../../../data/models/chapter.dart';
 import '../../../state/reading.state.dart';
 import '../../components/image/multi_source_image.dart';
 import '../chapter.flow.dart';
 
 class ChapterContent extends StatelessWidget {
-  const ChapterContent({super.key, required this.flow});
+  const ChapterContent(
+      {super.key,
+      required this.flow,
+      required this.book,
+      required this.chapter});
 
   final ChapterFlow flow;
+  final Book book;
+  final Chapter chapter;
 
   @override
   Widget build(BuildContext context) {
-    final book = flow.book;
-    final chapter = flow.chapter.value!;
     flow.updateLoadProgressState(flow.loadedUnits);
 
     return chapter.hasContent(book.type)

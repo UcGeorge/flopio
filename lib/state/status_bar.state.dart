@@ -21,14 +21,16 @@ class StatusBarState {
   static void removelItem(String key) =>
       lItems.update(lItems.value..remove(key));
 
-  static void update(String key, Widget value) {
+  static void updatel(String key, Widget value) {
     lItems.update(lItems.value
       ..update(
         key,
         (_) => value,
         ifAbsent: () => value,
       ));
+  }
 
+  static void updater(String key, Widget value) {
     rItems.update(rItems.value
       ..update(
         key,

@@ -18,21 +18,18 @@ import 'chapter.view.dart';
 import 'components/progress_indicator.dart';
 
 class ChapterFlow {
-  ChapterFlow() : book = ReadingState.state.value!;
+  ChapterFlow()
+      : book = ReadingState.state.value!,
+        chapter = StreamedValue<Chapter>(
+            initialValue: ReadingState.state.value!.chapters!.firstWhere(
+                (element) => element.id == ReadingState.chapterIdState.value!));
 
   final Book book;
-  final StreamedValue<Chapter?> chapter =
-      StreamedValue<Chapter?>(initialValue: null);
-
+  final StreamedValue<Chapter> chapter;
   late StreamSubscription chapterIdStateStreamSubscription;
   Set<int> loadedUnits = {};
 
   void init() {
-    final chapterId = ReadingState.chapterIdState.value!;
-
-    chapter.update(
-        book.chapters!.firstWhere((element) => element.id == chapterId));
-
     chapterIdStateStreamSubscription =
         ReadingState.chapterIdState.stream.listen(_updateChapterState);
 
@@ -45,11 +42,11 @@ class ChapterFlow {
     StatusBarState.removerItem('chapter-load-progress');
 
     final nextChapterId =
-        book.chapters![book.chapters!.indexOf(chapter.value!) + 1].id;
+        book.chapters![book.chapters!.indexOf(chapter.value) + 1].id;
 
     HistoryService.removeFromHistory(
       bookId: book.id,
-      chapterId: chapter.value!.id,
+      chapterId: chapter.value.id,
       addChapterId: nextChapterId,
     );
 
@@ -62,11 +59,11 @@ class ChapterFlow {
     StatusBarState.removerItem('chapter-load-progress');
 
     final nextChapterId =
-        book.chapters![book.chapters!.indexOf(chapter.value!) - 1].id;
+        book.chapters![book.chapters!.indexOf(chapter.value) - 1].id;
 
     HistoryService.removeFromHistory(
       bookId: book.id,
-      chapterId: chapter.value!.id,
+      chapterId: chapter.value.id,
       addChapterId: nextChapterId,
     );
 
@@ -74,11 +71,9 @@ class ChapterFlow {
   }
 
   void closeChapter(BuildContext context) {
-    if (chapter.value == null) return;
-
     HistoryService.addToHistory(
       bookId: book.id,
-      chapterId: chapter.value!.id,
+      chapterId: chapter.value.id,
       pageNumber: 1,
       position: 0,
     );
@@ -92,11 +87,11 @@ class ChapterFlow {
   }
 
   void updateLoadProgressState(Set<int> loadedUnits) {
-    StatusBarState.update(
+    StatusBarState.updater(
       'chapter-load-progress',
       ChapterProgressIndicator(
         book: book,
-        chapter: chapter.value!,
+        chapter: chapter.value,
         loadedUnits: loadedUnits,
       ),
     );
@@ -120,8 +115,6 @@ class ChapterFlow {
   Future<void> _getChapterDetails() async {
     final chapter = this.chapter.value;
 
-    if (chapter == null) return;
-
     LogUtil.devLog(
       "ChapterFlow._getChapterDetails()",
       message: 'Getting chapter details for ${book.name} / ${chapter.name}',
@@ -131,8 +124,7 @@ class ChapterFlow {
 
     late Chapter updatedChapter;
 
-    if ((book.type == BookType.manga && chapter.chapterImages == null) ||
-        (book.type == BookType.novel && chapter.chapterParagraphs == null)) {
+    if (!chapter.hasContent(book.type)) {
       updatedChapter = await source.getBookChapterDetails(chapter);
     } else {
       return;
@@ -165,5 +157,7 @@ class ChapterFlow {
 
     chapter.update(
         book.chapters!.firstWhere((element) => element.id == chapterId));
+
+    _getChapterDetails();
   }
 }
