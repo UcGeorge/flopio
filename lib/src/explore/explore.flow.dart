@@ -1,6 +1,9 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../app/resumable_flow.dart';
+import '../../util/flow.util.dart';
+import 'explore.view.dart';
 
 class ExploreFlow extends ResumableFlow {
   @override
@@ -8,6 +11,11 @@ class ExploreFlow extends ResumableFlow {
 
   @override
   void resume(BuildContext context, [bool startExpanded = false]) {
-    // TODO: implement resume
+    FlowUtil.moveToAndRemoveAll(
+      context: context,
+      transition: FlowTransition.fade,
+      transitionDuration: 300.ms,
+      page: ExploreView(),
+    );
   }
 }
