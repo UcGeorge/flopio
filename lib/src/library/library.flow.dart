@@ -15,7 +15,7 @@ class LibraryFlow extends ResumableFlow {
       context: context,
       transition: FlowTransition.fade,
       transitionDuration: 300.ms,
-      page: LibraryPage(),
+      page: LibraryPage(startExpanded: startExpanded),
     );
   }
 }

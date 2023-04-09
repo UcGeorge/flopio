@@ -33,6 +33,7 @@ class HomeFlow extends ResumableFlow {
       transitionDuration: 300.ms,
       page: HomePage(
         flow: this..init(),
+        startExpanded: startExpanded,
       ),
     );
   }

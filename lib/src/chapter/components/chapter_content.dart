@@ -5,6 +5,7 @@ import '../../../app/colors.dart';
 import '../../../data/models/book.dart';
 import '../../../data/models/chapter.dart';
 import '../../../state/reading.state.dart';
+import '../../../util/screen.util.dart';
 import '../../components/image/multi_source_image.dart';
 import '../chapter.flow.dart';
 
@@ -28,10 +29,9 @@ class ChapterContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                // width: ScreenUtil.screenSize(context).width >= 802
-                //     ? 800
-                //     : ScreenUtil.screenSize(context).width - 2,
-                constraints: const BoxConstraints(maxWidth: 800),
+                width: ScreenUtil.screenSize(context).width >= 802
+                    ? 800
+                    : ScreenUtil.screenSize(context).width - 2,
                 color: AppColors.dark,
                 child: ListView.builder(
                   // shrinkWrap: true,

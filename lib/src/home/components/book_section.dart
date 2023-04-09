@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../app/fonts.dart';
 import '../../../data/models/book.dart';
@@ -68,7 +69,10 @@ class BookSection extends StatelessWidget {
                         i < ((books.length) <= cap ? (books.length) : cap);
                         i++)
                       BookTile(book: books[i])
-                  ],
+                  ].animate(interval: 50.ms).scaleXY(
+                        duration: 300.ms,
+                        curve: Curves.easeInOut,
+                      ),
                 ),
               ],
             ),
