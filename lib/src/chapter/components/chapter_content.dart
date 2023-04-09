@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../app/colors.dart';
+import '../../../app/fonts.dart';
 import '../../../data/models/book.dart';
 import '../../../data/models/chapter.dart';
 import '../../../state/reading.state.dart';
@@ -22,7 +23,9 @@ class ChapterContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    flow.updateLoadProgressState(flow.loadedUnits);
+    if (book.type == BookType.manga) {
+      flow.updateLoadProgressState(flow.loadedUnits);
+    }
 
     return chapter.hasContent(book.type)
         ? Row(
@@ -41,11 +44,20 @@ class ChapterContent extends StatelessWidget {
                     var type = book.type;
                     return type == BookType.novel
                         ? Container(
-                            height: 20,
-                            color: Colors.red,
                             margin: const EdgeInsets.symmetric(
-                              horizontal: 1,
-                              vertical: .5,
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: Text(
+                              chapter.chapterParagraphs![i],
+                              maxLines: 100,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppFonts.nunito.copyWith(
+                                fontSize: 16,
+                                color: AppColors.thisWhite.withOpacity(0.7),
+                                letterSpacing: 1.5,
+                              ),
                             ),
                           )
                         : MultiSourceImage(
