@@ -49,9 +49,14 @@ class _BookTileState extends State<BookTile> {
                 ),
               ),
             )
-          : const SizedBox(
+          : SizedBox(
               height: 118,
               width: 118,
+              child: Icon(
+                Icons.menu_book_rounded,
+                size: 64,
+                color: AppColors.blueGrey.withOpacity(.15),
+              ),
             ),
     );
   }

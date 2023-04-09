@@ -3,7 +3,10 @@ import '../models/book.dart';
 import '../models/chapter.dart';
 
 class WuxiaWorld extends BookSource {
-  WuxiaWorld() : super('Wuxia World');
+  const WuxiaWorld() : super('Wuxia World');
+
+  @override
+  String get domain => "https://www.wuxiaworld.com/";
 
   @override
   Future<Chapter> getBookChapterDetails(Chapter chapter) async {

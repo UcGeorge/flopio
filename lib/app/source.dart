@@ -10,6 +10,8 @@ abstract class BookSource extends Equatable {
 
   final String name;
 
+  String get domain;
+
   Future<List<Book>> getHomePage();
 
   Future<List<Book>> search(String term);

@@ -10,7 +10,8 @@ import '../models/shen_image.dart';
 class Manganelo extends BookSource {
   const Manganelo() : super('Manganelo');
 
-  final String domain = "https://manganato.com";
+  @override
+  String get domain => "https://manganato.com";
 
   @override
   Future<Chapter> getBookChapterDetails(Chapter chapter) async {
@@ -146,7 +147,7 @@ class Manganelo extends BookSource {
             name: title,
             type: BookType.manga,
             link: href,
-            source: 'Manganelo',
+            source: name,
           ));
         });
 
@@ -186,7 +187,7 @@ class Manganelo extends BookSource {
             name: title,
             type: BookType.manga,
             link: href,
-            source: 'Manganelo',
+            source: name,
           ));
         });
 
