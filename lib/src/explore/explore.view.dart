@@ -40,7 +40,8 @@ class ExploreView extends StatelessWidget {
                 (element, index) {
                   bookSections.add(BookSection(
                     books: bookSectionBooks[index],
-                    title: element.name.capitalize,
+                    title:
+                        "${element.name.capitalize}: ${flow.searchString.value}",
                   ));
                 },
               );

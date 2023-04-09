@@ -84,8 +84,8 @@ class Bookname extends StatelessWidget {
         children: [
           Text(
             book.name,
-            maxLines: 3,
-            overflow: TextOverflow.fade,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: AppFonts.nunito.copyWith(
               color: Colors.white,
               fontSize: 30.0,
