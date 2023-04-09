@@ -1,16 +1,14 @@
-import 'package:logging/logging.dart';
 import 'package:web_scraper/web_scraper.dart';
 
 import '../../app/source.dart';
+import '../../util/log.util.dart';
 import '../../util/string.util.dart';
 import '../models/book.dart';
 import '../models/chapter.dart';
 import '../models/shen_image.dart';
 
-final _log = Logger('manganelo');
-
 class Manganelo extends BookSource {
-  Manganelo() : super('Manganelo');
+  const Manganelo() : super('Manganelo');
 
   final String domain = "https://manganato.com";
 
@@ -35,7 +33,7 @@ class Manganelo extends BookSource {
         throw Exception('Unable to get chapter details');
       }
     } on WebScraperException catch (e) {
-      _log.warning(e.errorMessage());
+      LogUtil.devLog(name, message: e.errorMessage() ?? "");
       return result;
     }
   }
@@ -48,7 +46,10 @@ class Manganelo extends BookSource {
     const descriptionSelector = '#panel-story-info-description';
     const chapterNameSelector = '.row-content-chapter .a-h a';
 
-    _log.info('Getting details from ${book.link}');
+    LogUtil.devLog(
+      name,
+      message: 'Getting details from ${book.link}',
+    );
     final webScraper = WebScraper(domain);
 
     Book result = book;
@@ -120,7 +121,7 @@ class Manganelo extends BookSource {
         throw Exception('Unable to get book details');
       }
     } on WebScraperException catch (e) {
-      _log.warning(e.errorMessage());
+      LogUtil.devLog(name, message: e.errorMessage() ?? "");
       return result;
     }
   }
@@ -132,7 +133,7 @@ class Manganelo extends BookSource {
     const String homePageItemTitle = ".content-genres-item h3 a";
 
     List<Book> result = [];
-    _log.info('Getting homepage');
+    LogUtil.devLog(name, message: 'Getting homepage');
     final webScraper = WebScraper(domain);
 
     try {
@@ -160,14 +161,49 @@ class Manganelo extends BookSource {
         throw Exception('Unable to get homepage');
       }
     } on WebScraperException catch (e) {
-      _log.warning(e.errorMessage());
+      LogUtil.devLog(name, message: e.errorMessage() ?? "");
       return result;
     }
   }
 
   @override
   Future<List<Book>> search(String term) async {
-    // TODO: implement search
-    throw UnimplementedError();
+    final String searchPageEndpoint = "/search/story/${term.toSnakeCase()}";
+    const String searchPageItemTitle = ".search-story-item h3 a";
+    const String homePageItemCoverImage = ".search-story-item a img";
+
+    List<Book> result = [];
+    LogUtil.devLog(name, message: 'Searching $term');
+    final webScraper = WebScraper(domain);
+
+    try {
+      if (await webScraper.loadWebPage(searchPageEndpoint)) {
+        webScraper.getElement(searchPageItemTitle, ['href']).forEach((e) {
+          var title = e['title'];
+          var href = e['attributes']['href'];
+          result.add(Book(
+            id: (domain + title).toHash,
+            name: title,
+            type: BookType.manga,
+            link: href,
+            source: 'Manganelo',
+          ));
+        });
+
+        //* Get cover picture
+        webScraper.getElement(homePageItemCoverImage, ['src']).iterate((e, i) {
+          var src = e['attributes']['src'];
+          result[i] = result[i].copyWith(coverPicture: ShenImage(src));
+        });
+
+        LogUtil.devLog(name, message: 'Found ${result.length} results');
+        return result;
+      } else {
+        throw Exception('Unable to get search results');
+      }
+    } on WebScraperException catch (e) {
+      LogUtil.devLog(name, message: e.errorMessage() ?? "");
+      return result;
+    }
   }
 }

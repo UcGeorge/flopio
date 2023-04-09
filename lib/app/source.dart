@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
+
 import '../data/models/book.dart';
 import '../data/models/chapter.dart';
 
-abstract class BookSource {
-  BookSource(this.name);
+abstract class BookSource extends Equatable {
+  const BookSource(this.name);
 
   final String name;
 
@@ -15,6 +17,9 @@ abstract class BookSource {
   Future<Book> getBookDetails(Book book, {required List<String> fields});
 
   Future<Chapter> getBookChapterDetails(Chapter chapter);
+
+  @override
+  List<Object> get props => [name];
 }
 
 extension Iterator<T> on List<T> {
