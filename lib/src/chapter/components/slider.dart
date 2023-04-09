@@ -22,11 +22,35 @@ class ChapterSlider extends StatefulWidget {
 
 class _ChapterSliderState extends State<ChapterSlider> {
   late num value;
+  late void Function() scrollListener;
 
   @override
   void initState() {
     value = widget.value;
+    scrollListener = _scrollListener;
+    widget.widget.chapterScrollController.addListener(scrollListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.widget.chapterScrollController.removeListener(scrollListener);
+  }
+
+  void _scrollListener() {
+    final controller = widget.widget.chapterScrollController;
+
+    if (!controller.hasClients || !mounted) return;
+
+    final maxExtent = controller.position.maxScrollExtent;
+    final currentPosition = controller.offset;
+
+    final sliderLen = widget.chapterLength;
+
+    setState(() {
+      value = (currentPosition / maxExtent) * sliderLen;
+    });
   }
 
   @override
