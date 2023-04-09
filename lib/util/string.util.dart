@@ -21,6 +21,10 @@ extension StringUtils on String {
     return output.toLowerCase();
   }
 
+  String toSnakeCase() {
+    return toLowerCase().replaceAll(" ", "_").toLowerCase();
+  }
+
   String get toHash => sha256.convert(utf8.encode(this)).toString();
 }
 
