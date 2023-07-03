@@ -59,8 +59,8 @@ class Chapter extends Equatable {
   List<Object> get props => [id];
 
   bool hasContent(BookType type) => type == BookType.manga
-      ? chapterImages != null
-      : chapterParagraphs != null;
+      ? chapterImages?.isNotEmpty ?? false
+      : chapterParagraphs?.isNotEmpty ?? false;
 
   int contentLength(BookType type) => type == BookType.manga
       ? chapterImages?.length ?? 0
